@@ -22,9 +22,15 @@ class db_connector:
         print("load_counties")
         county_dicts = []
         mycursor = self.md_db.cursor()
-        for table in self.county_names:
-            mycursor.execute("SELECT * FROM `" + table + "county points`")
-            county_dict = {"poly": mycursor.fetchall()}
+        mycursor.execute("SELECT * FROM md_population")
+        county_pops = mycursor.fetchall()
+        print(county_pops)
+        for name in self.county_names:
+            mycursor.execute("SELECT * FROM `" + name + "county points`")
+            county_dict = {"name": name, "poly": Polygon(mycursor.fetchall())}
+            for county_pop in county_pops:
+                if county_pop[0].lower()+ ' ' == (name.lower()):
+                    county_dict["population"] = county_pop[1]
             county_dicts.append(county_dict)
         return county_dicts
         
@@ -38,5 +44,10 @@ class db_connector:
 conn = db_connector("localhost", "root", "password")
 points = conn.load_state_boundary()
 print(type(points))
-print(conn.load_counties())
+for i in conn.load_counties():
+    try:
+        print(i["population"])
+    except:
+        print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~oh no~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        print(i["name"])
 
