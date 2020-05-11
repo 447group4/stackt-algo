@@ -57,7 +57,7 @@ class stackt_algo:
 		for i in found_keys:
 			ret_list.append(array[i])
 			print(array[i])
-		return [ret_list[0]]
+		return ret_list
 
 
 
@@ -70,10 +70,8 @@ class stackt_algo:
 		combinations = itertools.combinations(list(poly.exterior.coords), 2)
 		candidates = []
 		count = 0
-		N = 1
-		if len(poly.exterior.coords) < 400:
-			N = 4
-		skip = len(poly.exterior.coords)//N
+		N = 2
+		skip = (len(poly.exterior.coords)//N)-50
 		for combination in combinations:
 			if count%(skip) == 0:
 				point_a = combination[0]
